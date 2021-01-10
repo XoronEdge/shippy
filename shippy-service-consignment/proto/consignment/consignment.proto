@@ -5,6 +5,7 @@ package consignment;
 // handle by grpc
 service ShippingService {
   rpc CreateConsignment(Consignment) returns (Response) {}
+  rpc GetConsignments(GetRequest) returns (Response) {}
 }
 
 //messages handle by protobuf it is DSL
@@ -23,9 +24,12 @@ message Container {
   string user_id = 4;
 }
 
+message GetRequest {}
 message Response {
   bool created = 1;
   Consignment consignment = 2;
+  //repeated represent array
+  repeated Consignment consignments = 3;
 }
 //for grpc we use 
 // plugin go get -u github.com/golang/protobuf/protoc-gen-go

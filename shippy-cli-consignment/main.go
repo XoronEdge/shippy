@@ -9,9 +9,8 @@ import (
 
 	"context"
 
+	"github.com/micro/micro/service"
 	pb "github.com/xoronedge/shippy/shippy-service-consignment/proto/consignment"
-
-	"google.golang.org/grpc"
 )
 
 const (
@@ -31,13 +30,19 @@ func parseFile(file string) (*pb.Consignment, error) {
 
 func main() {
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
-	}
-	defer conn.Close()
-	client := pb.NewShippingServiceClient(conn)
+	///-------------------------------------------------------Without micro
+	// conn, err := grpc.Dial(address, grpc.WithInsecure())
+	// if err != nil {
+	// 	log.Fatalf("Did not connect: %v", err)
+	// }
+	// defer conn.Close()
+	// client := pb.NewShippingServiceClient(conn)
 
+	///--------------------WITH MICROOO
+	srv := service.New()
+	srv.Init()
+
+	client := pb.NewShippingService("shippy.consignment.service", srv.Client())
 	// Contact the server and print out its response.
 	file := defaultFilename
 	if len(os.Args) > 1 {
@@ -55,4 +60,25 @@ func main() {
 		log.Fatalf("Could not greet: %v", err)
 	}
 	log.Printf("Created: %t", r.Created)
+
+	r, err = client.CreateConsignment(context.Background(), consignment)
+	if err != nil {
+		log.Fatalf("Could not greet: %v", err)
+	}
+	log.Printf("Created: %t", r.Created)
+
+	getAll, err := client.GetConsignments(context.Background(), &pb.GetRequest{})
+	if err != nil {
+		log.Fatalf("Could not list consignments: %v", err)
+	}
+	for _, v := range getAll.Consignments {
+		log.Println(v)
+	}
 }
+
+//----------------------------------------------------------
+//----Every network have own mdsn so both be in same network to work
+//service in container and container have own network
+//hots cli is on other netwrok and
+//micro work with mdsn which every network have its own
+//----------------------------------------------------------

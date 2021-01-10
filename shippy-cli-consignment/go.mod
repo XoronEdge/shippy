@@ -3,7 +3,7 @@ module github.com/xoronedge/shippy/shippy-cli-consignment
 go 1.15
 
 //use replace its in my local so pick it from local path
-replace github.com/xoronedge/shippy/shippy-service-consignment => ../shippy-service-consignment
+//replace github.com/xoronedge/shippy/shippy-service-consignment => ../shippy-service-consignment
 
 require (
 	github.com/golang/protobuf v1.4.3 // indirect
