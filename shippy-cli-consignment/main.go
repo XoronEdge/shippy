@@ -9,7 +9,7 @@ import (
 
 	"context"
 
-	"github.com/micro/micro/service"
+	"github.com/micro/micro/v3/service"
 	pb "github.com/xoronedge/shippy/shippy-service-consignment/proto/consignment"
 )
 
